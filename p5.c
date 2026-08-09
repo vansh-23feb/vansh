@@ -1,109 +1,64 @@
 #include <stdio.h>
 
-struct Student {
-    int roll;
-    char name[50];
-    int marks[5];
-    int total;
-    float percentage;
-    char grade;
-};
-
 int main() {
-    struct Student s[100];
-    int n, i, j;
-    int topper = 0;
-    float classTotal = 0;
+    int a[10][10], b[10][10], c[10][10];
+    int r1, c1, r2, c2;
+    int i, j, k;
 
-    printf("Enter number of students: ");
-    scanf("%d", &n);
+    // Input dimensions
+    printf("Enter rows and columns of first matrix: ");
+    scanf("%d %d", &r1, &c1);
 
-    // Input student details
-    for (i = 0; i < n; i++) {
-        printf("\nEnter details of student %d:\n", i + 1);
+    printf("Enter rows and columns of second matrix: ");
+    scanf("%d %d", &r2, &c2);
 
-        printf("Roll number: ");
-        scanf("%d", &s[i].roll);
+    // Check compatibility
+    if (c1 != r2) {
+        printf("Matrix multiplication is not possible.\n");
+        printf("Columns of first matrix must equal rows of second matrix.\n");
+        return 0;
+    }
 
-        printf("Name: ");
-        scanf(" %[^\n]", s[i].name);
-
-        printf("Enter marks in 5 subjects:\n");
-        for (j = 0; j < 5; j++) {
-            scanf("%d", &s[i].marks[j]);
-        }
-
-        // Calculate total
-        s[i].total = 0;
-
-        for (j = 0; j < 5; j++) {
-            s[i].total += s[i].marks[j];
-        }
-
-        // Calculate percentage
-        s[i].percentage = s[i].total / 5.0;
-
-        // Calculate grade
-        if (s[i].percentage >= 90)
-            s[i].grade = 'A';
-        else if (s[i].percentage >= 80)
-            s[i].grade = 'B';
-        else if (s[i].percentage >= 70)
-            s[i].grade = 'C';
-        else if (s[i].percentage >= 60)
-            s[i].grade = 'D';
-        else if (s[i].percentage >= 50)
-            s[i].grade = 'E';
-        else
-            s[i].grade = 'F';
-
-        classTotal += s[i].percentage;
-
-        // Find topper
-        if (s[i].percentage > s[topper].percentage) {
-            topper = i;
+    // Input first matrix
+    printf("Enter elements of first matrix:\n");
+    for (i = 0; i < r1; i++) {
+        for (j = 0; j < c1; j++) {
+            scanf("%d", &a[i][j]);
         }
     }
 
-    // Display result of all students
-    printf("\n========== STUDENT RESULTS ==========\n");
-
-    for (i = 0; i < n; i++) {
-        printf("\nRoll Number: %d", s[i].roll);
-        printf("\nName: %s", s[i].name);
-        printf("\nTotal Marks: %d / 500", s[i].total);
-        printf("\nPercentage: %.2f%%", s[i].percentage);
-        printf("\nGrade: %c\n", s[i].grade);
+    // Input second matrix
+    printf("Enter elements of second matrix:\n");
+    for (i = 0; i < r2; i++) {
+        for (j = 0; j < c2; j++) {
+            scanf("%d", &b[i][j]);
+        }
     }
 
-    // Display class topper
-    printf("\n========== CLASS TOPPER ==========\n");
-    printf("Roll Number: %d\n", s[topper].roll);
-    printf("Name: %s\n", s[topper].name);
-    printf("Percentage: %.2f%%\n", s[topper].percentage);
+    // Initialize result matrix
+    for (i = 0; i < r1; i++) {
+        for (j = 0; j < c2; j++) {
+            c[i][j] = 0;
+        }
+    }
 
-    // Display students who failed
-    printf("\n========== FAILED STUDENTS ==========\n");
-
-    for (i = 0; i < n; i++) {
-        int failed = 0;
-
-        for (j = 0; j < 5; j++) {
-            if (s[i].marks[j] < 40) {
-                failed = 1;
-                break;
+    // Matrix multiplication
+    for (i = 0; i < r1; i++) {
+        for (j = 0; j < c2; j++) {
+            for (k = 0; k < c1; k++) {
+                c[i][j] = c[i][j] + a[i][k] * b[k][j];
             }
         }
-
-        if (failed) {
-            printf("Roll No: %d, Name: %s\n",
-                   s[i].roll, s[i].name);
-        }
     }
 
-    // Calculate class average
-    printf("\n========== CLASS AVERAGE ==========\n");
-    printf("Class Average: %.2f%%\n", classTotal / n);
+    // Display result
+    printf("\nResultant Matrix:\n");
+    for (i = 0; i < r1; i++) {
+        for (j = 0; j < c2; j++) {
+            printf("%d ", c[i][j]);
+        }
+        printf("\n");
+    }
 
     return 0;
 }
